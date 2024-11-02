@@ -1,4 +1,5 @@
 from settings import *
+from minigames import MemoryGame
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites):
@@ -12,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.Vector2()
         self.speed = 200
         self.collision_sprites = collision_sprites
-    
+
     def load_images(self):
         self.frames = {'left': [], 'right': [], 'up': [], 'down': []}
 
@@ -46,7 +47,14 @@ class Player(pygame.sprite.Sprite):
                 else:
                     if self.direction.y < 0: self.hitbox_rect.top = sprite.rect.bottom
                     if self.direction.y > 0: self.hitbox_rect.bottom = sprite.rect.top
-
+    
+    def teleport(self):
+        proximity_points = {
+            "abstract_reasoning": pygame.Rect(654, 792, 20, 20)
+        }
+        if self.hitbox_rect.colliderect(proximity_points["abstract_reasoning"]):
+            MemoryGame()
+                    
     def animate(self, dt):
         if self.direction.x != 0:
             self.state = 'right' if self.direction.x > 0 else 'left'
@@ -59,4 +67,5 @@ class Player(pygame.sprite.Sprite):
     def update(self, dt):
         self.input()
         self.move(dt)
+        self.teleport()
         #self.animate(dt)

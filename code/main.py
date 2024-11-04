@@ -23,8 +23,6 @@ class Game:
         self.music = pygame.mixer.Sound(join('audio', 'BGM', 'Background Music.mp3'))
         self.music.play(loops = -1)
 
-        self.gameStateManager = GameStateManager('Start')
-
         self.setup()
     
     def setup(self):
@@ -36,7 +34,7 @@ class Game:
             CollisionSprite((obj.x, obj.y), pygame.Surface((obj.width, obj.height)), self.collision_sprites)
         for obj in map.get_layer_by_name('Entities'):
             if obj.name == 'Player':
-                self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites)
+                self.player = Player((obj.x, obj.y), self.display_surface, self.all_sprites, self.collision_sprites)
     
     def run(self):
         while self.running:
@@ -46,8 +44,6 @@ class Game:
                     self.running = False
 
             self.all_sprites.update(dt)
-
-            # self.states[self.gameStateManager.get_state()].run()
 
             self.display_surface.fill('black')            
             self.all_sprites.draw(self.player.rect.center)

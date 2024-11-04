@@ -1,14 +1,32 @@
 from settings import *
-from minigames import MemoryGame
+from minigames import *
+from gamemanager import GameStateManager
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, display, groups, collision_sprites):
         super().__init__(groups)
         self.load_images()
+        self.display_surface = display
         self.state, self.frame_index = 'down', 0
         self.image = pygame.image.load(join('images', 'player', 'down', '0.png')).convert_alpha()
         self.rect = self.image.get_frect(center = pos)
         self.hitbox_rect = self.rect.inflate(-1, -1)
+
+        self.gameStateManager = GameStateManager('Hall')
+        
+        self.Hall = Hall(self.display_surface, self.gameStateManager)
+        self.ARMinigame = MemoryGame(self.display_surface, self.gameStateManager)
+        self.mathMinigame = MathRoomGame(self.display_surface, self.gameStateManager)
+        self.geoMinigame = ContinentMatchGame(self.display_surface, self.gameStateManager)
+        self.englishMinigame = JumbleGame(self.display_surface, self.gameStateManager)
+
+        self.states = {
+            'Hall':self.Hall,
+            'AR': self.ARMinigame,
+            'Math': self.mathMinigame,
+            'Geography': self.geoMinigame,
+            'English': self.englishMinigame,
+            }
         
         self.direction = pygame.Vector2()
         self.speed = 200
@@ -50,10 +68,11 @@ class Player(pygame.sprite.Sprite):
     
     def teleport(self):
         proximity_points = {
-            "abstract_reasoning": pygame.Rect(654, 792, 20, 20)
+            "abstract_reasoning": pygame.Rect(655, 795, 20, 20)
         }
         if self.hitbox_rect.colliderect(proximity_points["abstract_reasoning"]):
-            MemoryGame()
+            self.gameStateManager = GameStateManager('AR')
+            self.states[self.gameStateManager.get_state()].run()
                     
     def animate(self, dt):
         if self.direction.x != 0:

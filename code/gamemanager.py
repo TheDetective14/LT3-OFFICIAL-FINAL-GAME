@@ -1,5 +1,4 @@
 from settings import *
-import sys
 
 class GameStateManager:
     def __init__(self, currentState):
@@ -10,4 +9,3 @@ class GameStateManager:
     
     def set_state(self, state):
         self.currentState = state
-    

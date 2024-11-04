@@ -3,6 +3,7 @@ from sprites import *
 from minigames import *
 from player import Player
 from groups import AllSprites
+from gamemanager import GameStateManager
 from pytmx.util_pygame import load_pygame
 
 class Game:
@@ -19,8 +20,10 @@ class Game:
         self.collision_sprites = pygame.sprite.Group()
         self.collide_points = pygame.sprite.Group()
 
-        self.music = pygame.mixer.Sound(join('audio', 'Background Music.mp3'))
+        self.music = pygame.mixer.Sound(join('audio', 'BGM', 'Background Music.mp3'))
         self.music.play(loops = -1)
+
+        self.gameStateManager = GameStateManager('Start')
 
         self.setup()
     
@@ -43,6 +46,8 @@ class Game:
                     self.running = False
 
             self.all_sprites.update(dt)
+
+            # self.states[self.gameStateManager.get_state()].run()
 
             self.display_surface.fill('black')            
             self.all_sprites.draw(self.player.rect.center)

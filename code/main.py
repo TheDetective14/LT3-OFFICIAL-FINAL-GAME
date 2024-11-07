@@ -1,10 +1,10 @@
 from settings import *
+
 from sprites import *
 from minigames import *
-from player import Player
-from groups import AllSprites
-from gamemanager import GameStateManager
-from pytmx.util_pygame import load_pygame
+from player import *
+from groups import *
+from gamemanager import *
 
 class Game:
     def __init__(self):
@@ -15,7 +15,6 @@ class Game:
         pygame.mixer.init()
         self.clock = pygame.time.Clock()
         self.running = True
-
         self.all_sprites = AllSprites()
         self.collision_sprites = pygame.sprite.Group()
         self.collide_points = pygame.sprite.Group()

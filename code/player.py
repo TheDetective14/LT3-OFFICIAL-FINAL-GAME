@@ -5,11 +5,17 @@ from gamemanager import GameStateManager
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, display, groups, collision_sprites):
         super().__init__(groups)
-        self.load_images()
         self.display_surface = display
-        self.state, self.frame_index = 'down', 0
-        self.image = pygame.image.load(join('images', 'player', 'down', '0.png')).convert_alpha()
-        self.rect = self.image.get_frect(center = pos)
+        self.image = pygame.image.load(join('images', 'player', 'down.png')).convert_alpha()
+        self.image_down = pygame.image.load(join('images', 'player', 'down.png')).convert_alpha()
+        self.image_up = pygame.image.load(join('images', 'player', 'up.png')).convert_alpha()
+        self.image_left = pygame.image.load(join('images', 'player', 'left.png')).convert_alpha()
+        self.image_right = pygame.image.load(join('images', 'player', 'right.png')).convert_alpha()
+        self.image_down = pygame.transform.scale(self.image_down, (25, 45))
+        self.image_up = pygame.transform.scale(self.image_up, (25, 45))
+        self.image_left = pygame.transform.scale(self.image_left, (25, 45))
+        self.image_right = pygame.transform.scale(self.image_right, (25, 45))
+        self.rect = self.image_right.get_frect(center = pos)
         self.hitbox_rect = self.rect.inflate(-1, -1)
 
         self.gameStateManager = GameStateManager('Hall')
@@ -29,25 +35,23 @@ class Player(pygame.sprite.Sprite):
             }
         
         self.direction = pygame.Vector2()
-        self.speed = 200
+        self.speed = 300
         self.collision_sprites = collision_sprites
 
-    def load_images(self):
-        self.frames = {'left': [], 'right': [], 'up': [], 'down': []}
-
-        for state in self.frames.keys():
-            for folder_path, sub_folders, file_names in walk(join('images', 'player', state)):
-                if file_names:
-                    for file_name in sorted(file_names, key=lambda name: int(name.split('.')[0])):
-                        full_path = join(folder_path, file_name)
-                        surf = pygame.image.load(full_path).convert_alpha()
-                        self.frames[state].append(surf)
-    
     def input(self):        
         keys = pygame.key.get_pressed()
         self.direction.x = int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT])
         self.direction.y = int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP])
         self.direction = self.direction.normalize() if self.direction else self.direction
+
+        if self.direction.y < 0:  # Moving up
+            self.image = self.image_up
+        elif self.direction.y > 0:  # Moving down
+            self.image = self.image_down
+        elif self.direction.x < 0:  # Moving left
+            self.image = self.image_left
+        elif self.direction.x > 0:  # Moving right
+            self.image = self.image_right
 
     def move(self,dt):
         self.hitbox_rect.x += self.direction.x * self.speed * dt
@@ -74,15 +78,6 @@ class Player(pygame.sprite.Sprite):
             self.gameStateManager = GameStateManager('AR')
             self.states[self.gameStateManager.get_state()].run()
                     
-    def animate(self, dt):
-        if self.direction.x != 0:
-            self.state = 'right' if self.direction.x > 0 else 'left'
-        if self.direction.y != 0:
-            self.state = 'down' if self.direction.y > 0 else 'up'
-
-        self.frame_index = self.frame_index + 5 * dt if self.direction else 0
-        self.image = self.frames[self.state][int(self.frame_index) % len(self.frames[self.state])] 
-
     def update(self, dt):
         self.input()
         self.move(dt)

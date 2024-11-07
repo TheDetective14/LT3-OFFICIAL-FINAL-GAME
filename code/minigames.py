@@ -9,7 +9,6 @@ class Hall:
     def run(self):
         pass
 
-
 class MemoryGame:
     def __init__(self, display, gameStateManager):
         
@@ -445,7 +444,7 @@ class JumbleGame:
         self.gameStateManager = gameStateManager
 
         # Display
-        self.SIZE = 900
+        self.SIZE = 1200
         self.screen = pygame.display.set_mode((self.SIZE, self.SIZE))
         pygame.display.set_caption("Jumble Mania: The Great Letter Escape!")
         

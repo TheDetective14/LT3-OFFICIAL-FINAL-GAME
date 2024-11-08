@@ -1,5 +1,5 @@
 from settings import *
-from minigames import *
+from menus import *
 from gamemanager import GameStateManager
 
 class Player(pygame.sprite.Sprite):
@@ -18,16 +18,16 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image_right.get_frect(center = pos)
         self.hitbox_rect = self.rect.inflate(-1, -1)
 
-        self.gameStateManager = GameStateManager('Hall')
+        self.gameStateManager = GameStateManager('Main Menu')
         
-        self.Hall = Hall(self.display_surface, self.gameStateManager)
+        self.MainMenu = MainMenu(self.display_surface, self.gameStateManager)
         self.ARMinigame = MemoryGame(self.display_surface, self.gameStateManager)
         self.mathMinigame = MathRoomGame(self.display_surface, self.gameStateManager)
         self.geoMinigame = ContinentMatchGame(self.display_surface, self.gameStateManager)
         self.englishMinigame = JumbleGame(self.display_surface, self.gameStateManager)
 
         self.states = {
-            'Hall':self.Hall,
+            'Main Menu':self.MainMenu,
             'AR': self.ARMinigame,
             'Math': self.mathMinigame,
             'Geography': self.geoMinigame,

@@ -1,6 +1,6 @@
 from settings import *
 
-class Hall:
+class MainMenu:
     def __init__(self, display, gameStatemanager):
         
         self.display = display

@@ -1,7 +1,6 @@
 from settings import *
-
 from sprites import *
-from minigames import *
+from menus import *
 from player import *
 from groups import *
 from gamemanager import *
@@ -10,7 +9,7 @@ class Game:
     def __init__(self):
         # Setup
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-        pygame.display.set_caption("Library Escape")
+        pygame.display.set_caption("BrainScape")
         pygame.font.init()
         pygame.mixer.init()
         self.clock = pygame.time.Clock()
@@ -22,8 +21,6 @@ class Game:
         self.music = pygame.mixer.Sound(join('audio', 'BGM', 'Background Music.mp3'))
         self.music.play(loops = -1)
 
-        self.setup()
-    
     def setup(self):
         map = load_pygame(join('data', 'maps', 'world.tmx'))
 
@@ -43,6 +40,8 @@ class Game:
                     self.running = False
 
             self.all_sprites.update(dt)
+
+            self.gameStateManager = GameStateManager('Main Menu')
 
             self.display_surface.fill('black')            
             self.all_sprites.draw(self.player.rect.center)
